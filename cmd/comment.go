@@ -58,11 +58,10 @@ var conCmd = &cobra.Command{
 				// 类型为常量处理
 				if ident.Obj.Kind == ast.Con {
 					// 优先获取单行注释
-					if spec.Comment != nil {
+					switch {
+					case spec.Comment != nil:
 						comments[ident.Name] = comment.GetConComment(spec.Comment)
-						continue
-					}
-					if spec.Doc != nil {
+					case spec.Doc != nil:
 						comments[ident.Name] = comment.GetConComment(spec.Doc)
 					}
 				}
