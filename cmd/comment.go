@@ -94,9 +94,3 @@ func init() {
 	viper.BindPFlag("output", conCmd.Flags().Lookup("output"))
 	viper.BindPFlag("type", conCmd.Flags().Lookup("type"))
 }
-
-func checkErr(err error) {
-	if err != nil {
-		panic(fmt.Sprintf("err: %+v", err))
-	}
-}

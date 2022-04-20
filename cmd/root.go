@@ -58,6 +58,7 @@ func init() {
 
 	// 子命令添加
 	rootCmd.AddCommand(commentCmd)
+	rootCmd.AddCommand(mysqlmdCmd)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -81,5 +82,11 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	}
+}
+
+func checkErr(err error) {
+	if err != nil {
+		panic(fmt.Sprintf("err: %+v", err))
 	}
 }
