@@ -1,0 +1,7 @@
+mysql:
+  addr: 127.0.0.1:3306 # 数据库链接
+  user: root # 数据库用户
+  pass: 123456 # 数据库密码
+  db: db_user # 数据库名
+  table: # 操作表名
+  dir:  # 导出目录
