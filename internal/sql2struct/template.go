@@ -1,7 +1,8 @@
+// Package sql2struct
 // @Title 输出模版定义
 // @Description 请填写文件描述（需要改）
 // @Author shigx 2022/4/20 6:13 下午
-package mysqlmd
+package sql2struct
 
 import "html/template"
 
@@ -21,6 +22,7 @@ func ({{.structName}}) TableName() string {
 	return "{{.tableName}}"
 }`
 
+// GetTemplate
 // @Description 返回模版
 // @Auth shigx
 // @Date 2022/4/20 6:25 下午

@@ -9,7 +9,6 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
-	"io/ioutil"
 	"os"
 	"strings"
 	"tool-cli/internal/comment"
@@ -35,7 +34,7 @@ var commentCmd = &cobra.Command{
 	Long:  commentDesc,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cmd.Help()
+			cobra.CheckErr(cmd.Help())
 			return
 		}
 	},
@@ -45,10 +44,15 @@ var commentCmd = &cobra.Command{
 var conCmd = &cobra.Command{
 	Use:   "con",
 	Short: "提取常量注释并生成map",
+	PreRun: func(cmd *cobra.Command, args []string) {
+		_ = viper.BindPFlag("input", cmd.Flags().Lookup("input"))
+		_ = viper.BindPFlag("output", cmd.Flags().Lookup("output"))
+		_ = viper.BindPFlag("type", cmd.Flags().Lookup("type"))
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		fset := token.NewFileSet()
 		f, err := parser.ParseFile(fset, viper.GetString("input"), nil, parser.ParseComments)
-		checkErr(err)
+		cobra.CheckErr(err)
 
 		var comments = make(map[string]string)
 		cmap := ast.NewCommentMap(fset, f, f.Comments)
@@ -73,12 +77,12 @@ var conCmd = &cobra.Command{
 			pkg = f.Name.Name
 		}
 		code, err := comment.GetConCode(viper.GetString("type"), pkg, comments)
-		checkErr(err)
+		cobra.CheckErr(err)
 		if commentOut == "" {
 			commentOut = strings.TrimSuffix(viper.GetString("input"), ".go") + "_msg.go"
 		}
 
-		checkErr(ioutil.WriteFile(commentOut, code, 0644))
+		cobra.CheckErr(os.WriteFile(commentOut, code, 0644))
 		fmt.Println("处理成功，output:", commentOut)
 	},
 }
@@ -89,8 +93,4 @@ func init() {
 	conCmd.Flags().StringVarP(&commentInput, "input", "i", os.Getenv("GOFILE"), `需要提取的文件`)
 	conCmd.Flags().StringVarP(&commentOut, "output", "o", "", `输出文件`)
 	conCmd.Flags().StringVarP(&constType, "type", "t", "int", "常量类型")
-
-	viper.BindPFlag("input", conCmd.Flags().Lookup("input"))
-	viper.BindPFlag("output", conCmd.Flags().Lookup("output"))
-	viper.BindPFlag("type", conCmd.Flags().Lookup("type"))
 }

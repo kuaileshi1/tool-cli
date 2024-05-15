@@ -5,7 +5,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-    http://www.apache.org/licenses/LICENSE-2.0
+	http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,7 +31,7 @@ var rootCmd = &cobra.Command{
 	// Long: "常用小工具脚本集合",
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == 0 {
-			cmd.Help()
+			cobra.CheckErr(cmd.Help())
 			return
 		}
 	},
@@ -58,7 +58,8 @@ func init() {
 
 	// 子命令添加
 	rootCmd.AddCommand(commentCmd)
-	rootCmd.AddCommand(mysqlmdCmd)
+	rootCmd.AddCommand(sql2mdCmd)
+	rootCmd.AddCommand(sql2structCmd)
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -80,13 +81,8 @@ func initConfig() {
 	viper.AutomaticEnv() // read in environment variables that match
 
 	// If a config file is found, read it in.
-	if err := viper.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	if err := viper.ReadInConfig(); err != nil {
+		cobra.CheckErr(err)
 	}
-}
-
-func checkErr(err error) {
-	if err != nil {
-		panic(fmt.Sprintf("err: %+v", err))
-	}
+	fmt.Println("Using config file:", viper.ConfigFileUsed())
 }
