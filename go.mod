@@ -1,4 +1,4 @@
-module tool-cli
+module github.com/kuaileshi1/tool-cli
 
 go 1.22
 
