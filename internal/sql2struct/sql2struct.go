@@ -24,7 +24,7 @@ var mysqlTypeToGoType = map[string]string{
 	"float":      "float64",
 	"double":     "float64",
 	"decimal":    "float64",
-	"date":       "string",
+	"date":       "time.Time",
 	"time":       "string",
 	"year":       "string",
 	"datetime":   "time.Time",
